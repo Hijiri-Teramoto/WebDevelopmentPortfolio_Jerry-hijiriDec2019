@@ -1,14 +1,14 @@
 <?php
-  require_once 'class/User.php';
-  $user = new User;
+    require_once 'class/User.php';
+    $user = new User;   
+    $specID = $_GET['specID'];
+    $userDetail = $user->getUserDetail($specID);
+    // print_r($viewCategory);
+    session_start();
 
-  session_start();
   $userid = $_SESSION['userid'];
   $result = $user->about($userid);
-  // print_r($result);
-
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -75,14 +75,14 @@
   </nav>
 
   <!-- Page Header -->
-  <header class="masthead" style="background-image: url('img/about-bg.jpg')">
+  <header class="masthead" style="background-image: url('img/home-bg.jpg')">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
-          <div class="page-heading">
-            <h1>About Me</h1>
-            <span class="subheading">This is what I do.</span>
+          <div class="site-heading">
+            <h1>Clean Blog</h1>
+            <span class="subheading">A Blog Theme by Start Bootstrap</span>
           </div>
         </div>
       </div>
@@ -99,15 +99,16 @@
           <div class="row p-0" style="">
 
           <?php
-            foreach($result as $row){
+            foreach($userDetail as $row){
               $picture = $row['user_picture'];
 
             echo "
-            <figure class='col-md-3 mt-2'><img src='img/$picture' alt='sing up image' style='width: 100px; height: 100px;'></figure>
+            <figure class='col-md-3 mt-2'><img src='img/$picture' alt='sing up image' style='width: 150px; height: 150px;'></figure>
 
               <div class='row col-md-9 ml-1'>
                 <div class='col-md-12'>
                 <a href='about_edit.php' class='float-right mt-1 waves-effec'><i class='fas fa-external-link-alt'></i></a>
+                <a href='actionUser.php?actiontype=deleteUser&id=".$row['user_id']."' class='btn btn-danger float-right mr-1 mt-1 p-1 rounded'><i class='fas fa-trash-alt'></i></a>
                   <h2>".$row['username']."</h2>
                   <p class='m-0'>
                   ".$row['bio']."      
@@ -181,12 +182,6 @@
 
       </div>
 
-    </div>
-  </div>
-  <div class="container d-block mt-5">
-    <div class="col-lg-8 col-md-10 mx-auto">
-    <h2><i class="fas fa-sticky-note text-success"></i>Your Categories</h2>
-    
     </div>
   </div>
 

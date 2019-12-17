@@ -1,6 +1,13 @@
 <?php
     require_once 'class/User.php';
+    $user = new User;   
+    $viewUser = $user->viewUsers();
+    $viewCategory = $user->viewCategory();
+    // print_r($viewCategory);
     session_start();
+
+  $userid = $_SESSION['userid'];
+  $result = $user->about($userid);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -49,8 +56,15 @@
             <a class="nav-link" href="contact.php">Contact</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="about.php"><?php $userPicture = $_SESSION['user_picture'];
-            echo "<img src='img/$userPicture' id='image' alt='sing up image' class='rounded-circle' style='width: 40px; height: 40px;'>"; ?></a>
+            <a class="nav-link" href="about.php"><?php 
+            foreach($result as $row){
+              $picture = $row['user_picture'];
+            
+            echo "<img src='img/$picture' alt='sing up image' class='rounded-circle' style='width: 30px; height: 30px;'>
+            ";
+            } 
+            ?></a>
+
           </li>
           <li class="nav-item">
             <a class="nav-link" href="actionUser.php?actiontype=logout&userid=<?php echo $_SESSION['userid'] ?>">Logout<i class="fas fa-sign-out-alt ml-1"></i></a>
@@ -77,10 +91,10 @@
 
   <!-- Main Content -->
   <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto">
-        
-        <div class="col-md-5">
+    <div class="col-xs-8 col-lg-12 mx-auto border">
+      <div class="row">
+        <div class="col-lg-4 mr-5">
+          <h2>Categories</h2>
             <table class="table">
                 <thead>
                     <tr>
@@ -90,33 +104,87 @@
                     </tr>
                 </thead>
                 <tbody>
-                    
+                    <?php
+                      foreach($viewCategory as $row){
+                        $categoryid = $row['category_id'];
+                        echo "
+                        <tr>
+                          <td>$categoryid</td>
+                          <td>".$row['category']."</td>
+                          <td><a href='actionUser.php?actiontype=deleteCategory&id=$categoryid' class='btn btn-danger p-2 rounded'><i class='fas fa-trash-alt fa-lg'></i></a></td>
+                        </tr>
+                        ";
+
+                      }
+                    ?>
+                    <tr>
+                      <form action="actionUser.php" method="post">
+                      <td><button type="submit" name="getCategory" class='btn btn-info rounded' style="padding: 1px 3px;"><i class="fas fa-plus-square fa-2x"></i></button></td>
+                      <td><input type="text" name="categoryName" placeholder="Category Name" class="form-control"></td>
+                      <td></td>
+                      </form>
+                    </tr>
                 </tbody>
             </table>
         </div>
-        <div class="col-md-5">
-            <table class="table">
+        <div class="col-lg-7">
+          <table class="table">
+            <h2>Uses</h2>
                 <thead>
                     <tr>
-                        <td></td>
-                        <td>Avotar</td>
-                        <td>Name</td>
-                        <td>Email</td>
-                        <td>Registration Date</td>
+                        <th></th>
+                        <th>Avatar</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Register</th>
+                        <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
-                    include 'class/User.php';
 
-                    $sql ="SELECT * FROM `user`";
-                    if($this->conn->query($sql)){
-                        echo
+                    foreach($viewUser as $row){
+                      $avatarPicture = $row['user_picture'];
+                      $userid = $row['user_id'];
+                      echo "
+                      <tr>
+                        <td>$userid</td>
+                        <td><a href='userDetailAdmin.php?specID=$userid'><img src='img/$avatarPicture' class='rounded-circle' style='width: 40px; height: 40px;'></a></td>
+                        <td>".$row['username']."</td>
+                        <td data-bind='text: text()' class='text-truncate' style='max-width: 100px;'>".$row['email']."</td>
+                        <td>".$row['registrationDate']."</td>
+                        <td><a href='actionUser.php?actiontype=deleteUser&id=$userid' class='btn btn-danger p-2 rounded'><i class='fas fa-trash-alt fa-lg'></i></a></td>
+                        <td><a href='userDetailAdmin.php?specID=$userid'><i class='fas fa-external-link-alt'></i></a></td>
+                      </tr>
+                      ";
                     }
                     ?>
                 </tbody>
             </table>
-
+                <h4 class="form-title">Sign up</h4>
+                        <form action="actionUser.php" method="POST" class="register-form" id="register-form">
+                            <div class="form-group">
+                                <label for="name"><i class="zmdi zmdi-account material-icons-name"></i></label>
+                                <input type="text" name="name" id="name" placeholder="Username" class="form-control"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="email"><i class="zmdi zmdi-email"></i></label>
+                                <input type="email" name="email" id="email" placeholder="Your Email" class="form-control"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="pass"><i class="zmdi zmdi-lock"></i></label>
+                                <input type="password" name="pass" id="pass" placeholder="Password" class="form-control"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="re-pass"><i class="zmdi zmdi-lock-outline"></i></label>
+                                <input type="password" name="re_pass" id="re_pass" placeholder="Repeat your password" class="form-control"/>
+                            </div>
+                            <div class="form-group form-button">
+                                <input type="submit" name="register" id="signup" class="btn btn-info p-3" value="Register"/>
+                            </div>
+                        </form>
+                    </div>
         </div>
 
       </div>

@@ -1,5 +1,11 @@
 <?php
-  session_start();
+ require_once 'class/User.php';
+ $user = new User;
+ 
+ session_start();
+
+ $userid = $_SESSION['userid'];
+ $result = $user->about($userid);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -48,8 +54,15 @@
             <a class="nav-link" href="contact.php">Contact</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="about.php"><?php $userPicture = $_SESSION['user_picture'];
-            echo "<img src='img/$userPicture' id='image' alt='sing up image' class='rounded-circle' style='width: 40px; height: 40px;'>"; ?></a>
+            <a class="nav-link" href="about.php"><?php 
+            foreach($result as $row){
+              $picture = $row['user_picture'];
+            
+            echo "<img src='img/$picture' alt='sing up image' class='rounded-circle' style='width: 30px; height: 30px;'>
+            ";
+            } 
+            ?></a>
+
           </li>
           <li class="nav-item">
             <a class="nav-link" href="actionUser.php?actiontype=logout&userid=<?php echo $_SESSION['userid'] ?>">Logout<i class="fas fa-sign-out-alt ml-1"></i></a>
