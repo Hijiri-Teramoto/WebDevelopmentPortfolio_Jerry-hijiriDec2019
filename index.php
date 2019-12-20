@@ -1,7 +1,7 @@
 <?php
  require_once 'class/User.php';
  $user = new User;
- 
+ $viewPost = $user->viewPost();
  session_start();
 
  $userid = $_SESSION['userid'];
@@ -54,11 +54,11 @@
             <a class="nav-link" href="contact.php">Contact</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="about.php"><?php 
+            <a class="nav-link pt-1" href="about.php"><?php 
             foreach($result as $row){
               $picture = $row['user_picture'];
             
-            echo "<img src='img/$picture' alt='sing up image' class='rounded-circle' style='width: 30px; height: 30px;'>
+            echo "<img src='img/$picture' alt='sing up image' class='rounded-circle' style='width: 35px; height: 35px;'>
             ";
             } 
             ?></a>
@@ -91,69 +91,57 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-8 col-md-10 mx-auto">
-        <div class="post-preview">
-          <a href="post.html">
-            <h2 class="post-title">
-              Man must explore, and this is exploration at its greatest
-            </h2>
-            <h3 class="post-subtitle">
-              Problems look mighty small from 150 miles up
-            </h3>
-          </a>
-          <p class="post-meta">Posted by
-            <a href="#">Start Bootstrap</a>
-            on September 24, 2019</p>
-        </div>
-        <hr>
-        <div class="post-preview">
-          <a href="post.html">
-            <h2 class="post-title">
-              I believe every human has a finite number of heartbeats. I don't intend to waste any of mine.
-            </h2>
-          </a>
-          <p class="post-meta">Posted by
-            <a href="#">Start Bootstrap</a>
-            on September 18, 2019</p>
-        </div>
-        <hr>
-        <div class="post-preview">
-          <a href="post.html">
-            <h2 class="post-title">
-              Science has not yet mastered prophecy
-            </h2>
-            <h3 class="post-subtitle">
-              We predict too much for the next year and yet far too little for the next ten.
-            </h3>
-          </a>
-          <p class="post-meta">Posted by
-            <a href="#">Start Bootstrap</a>
-            on August 24, 2019</p>
-        </div>
-        <hr>
-        <div class="post-preview">
-          <a href="post.html">
-            <h2 class="post-title">
-              Failure is not an option
-            </h2>
-            <h3 class="post-subtitle">
-              Many say exploration is part of our destiny, but it’s actually our duty to future generations.
-            </h3>
-          </a>
-          <p class="post-meta">Posted by
-            <a href="#">Start Bootstrap</a>
-            on July 8, 2019</p>
-        </div>
-        <hr>
-        <!-- Pager -->
-        <div class="clearfix">
-          <a class="btn btn-primary float-right" href="#">Older Posts &rarr;</a>
-        </div>
-      </div>
-    </div>
-  </div>
+      <?php
+        foreach($viewPost as $row){
+          $postImage = $row['post_image'];
+          $postid = $row['post_id'];
+          $avatorImage = $row['user_picture'];
+         echo "
+         <a href='postDetail.php?postid=$postid'>
+            <div class='card border mb-4'>
+              <div class='card-header post-preview'>
+                <div class='row' style='height: 50px;'>
+                  <div class='col-1'>
+                    <img src='img/$avatorImage' alt='sing up image' class='rounded-circle' style='width: 35px; height: 35px;'>
+                  </div>
+                  <div class='col-4'>
+                    <h3>".$row['username']."</h3>
+                  </div>
+                  <div class='col-7 text-right'>
+                    ".$row['post_date']."
+                  </div>
+                </div>
+                <div class='row'>
+                  <img src='img/$postImage' alt='Picture of Post' class='w-100 h-100'>
+                </div>
+              <div class='post-preview card-body'>
+                <div class='row'>
+                  <h2 class='post-title'>
+                    ".$row['title_name']."
+                  </h2>
+                </div>
+                  <p data-bind='text: text()' class='text-truncate post-subtitle' style='max-width: 700px;'>
 
-  <hr>
-
+                  ".$row['post_content']." 
+                  </p>
+                  <br>
+                  
+                  <div class='row d-inline-block px-auto'>
+                  <a href='postDetail.php?postid=$postid' class='border-info text-info'>view more</a>
+                  <br>
+                <div class='row'>
+                  <p class='border d-block border-info rounded my-1 text-info'>".$row['category']."</p>
+                </div>
+                </div>        
+              </div>
+              </div>
+            </div>
+            </a>
+            "; 
+          }
+        ?>
+        <hr>
+        
   <!-- Footer -->
   <footer>
     <div class="container">

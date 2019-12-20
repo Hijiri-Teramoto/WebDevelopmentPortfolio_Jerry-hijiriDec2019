@@ -1,12 +1,14 @@
 <?php
-  require_once 'class/User.php';
-  $user = new User;
-  
-  session_start();
+ require_once 'class/User.php';
+ $user = new User;
 
-  $userid = $_SESSION['userid'];
-  $result = $user->about($userid);
-  $categories = $user->viewCategory();
+ $postid = $_GET['postid'];
+ $postDetail = $user->postDetail($postid);
+ 
+ session_start();
+
+ $userid = $_SESSION['userid'];
+ $result = $user->about($userid);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -30,20 +32,6 @@
 
   <!-- Custom styles for this template -->
   <link href="css/clean-blog.min.css" rel="stylesheet">
-  <style>
-    @media screen { #files { display: none; } }
-    .browse_btn{
-  position: absolute;
-  top: 40px;
-  left: 50px; 
-  height: 100px;
-  width: 100px;
-  cursor: pointer;
-}
-img {
-  cursor: pointer;
-}
-  </style>
 
 </head>
 
@@ -52,7 +40,7 @@ img {
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
     <div class="container">
-      <a class="navbar-brand" href="index.php">Start Bootstrap</a>
+      <a class="navbar-brand" href="index.php">Hi! <?php echo $_SESSION['username'] ?></a>
       <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         Menu
         <i class="fas fa-bars"></i>
@@ -88,98 +76,78 @@ img {
   </nav>
 
   <!-- Page Header -->
-  <header class="masthead" style="background-image: url('img/post-bg.jpg')">
+  <header class="masthead" style="background-image: url('img/home-bg.jpg')">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
-          <div class="post-heading">
-            <h1>Man must explore, and this is exploration at its greatest</h1>
-            <h2 class="subheading">Problems look mighty small from 150 miles up</h2>
-            <span class="meta">Posted by
-              <a href="#">Start Bootstrap</a>
-              on August 24, 2019</span>
+          <div class="site-heading">
+            <h1>Clean Blog</h1>
+            <span class="subheading">A Blog Theme by Start Bootstrap</span>
           </div>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- Post Content -->
-    <div class="container">
-      <form action="actionUser.php" method="post" enctype="multipart/form-data">
+  <!-- Main Content -->
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+      <?php
+        foreach($postDetail as $row){
+          $postImage = $row['post_image'];
+          $avatorImage = $row['user_picture'];
+         echo "
+         <div class='card border mb-4'>
+         <div class='card-header post-preview'>
+           <div class='row' style='height: 50px;'>
+             <div class='col-1'>
+               <img src='img/$avatorImage' alt='sing up image' class='rounded-circle' style='width: 35px; height: 35px;'>
+             </div>
+             <div class='col-4'>
+               <h3>".$row['username']."</h3>
+             </div>
+             <div class='col-7 text-right'>
+               ".$row['post_date']."
+             </div>
+           </div>
+           <div class='row'>
+             <img src='img/$postImage' alt='Picture of Post' class='w-100 h-100'>
+           </div>
+         <div class='post-preview card-body'>
+           <div class='row'>
+            
+             <h2 class='post-title'>
+               ".$row['title_name']."
+             </h2>
+             <div class='col-12'>   
+                <p>
+                ".$row['post_content']." 
+                </p>
+             </div>
+             <br>
+             </div>
+             <div class='row'>
+             <p class='border d-block border-info rounded my-1 text-info'>".$row['category']."</p>
+           </div>        
+         </div>
+         </div>
+       </div>
+       "; 
+          }
+        ?>
         <div class="row">
-          <div class="col-lg-8 col-md-10 mx-auto">
-            <div class="card d-block p-0">
-
-              <div class="card-header bg-white">
-                <div class="row" style="max-height: 400px;">
-                  <label for='files'>
-                    <img src="img/white_color.jfif" id="image" class="w-100" style="height: 400px;">
-                    <span class="browse_btn"><i class="far fa-images fa-2x text-secondary"></i></span><input type="file" name="file" id="files">
-                  </label>
-                </div>
-              </div>
-              <div class="card-body">
-                <div class="row">
-                  <h2 class="col-7">TITLE</h2>
-                  <span id="view_todayE" style="font-size: 15px;" class="col-5 text-right"></span>
-<script type="text/javascript" class="">
-document.getElementById("view_todayE").innerHTML = getTodayE();
-
-function getTodayE() {
-	var now = new Date();
-	var year = now.getFullYear();
-	var mon = now.getMonth(); //１足さない
-	var day = now.getDate();
-	var you = now.getDay(); //曜日(0～6=日～土)
-
-	//曜日の選択肢
-	var youbi = new Array("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
-	//月名の選択肢
-	var month = new Array("January","February","March","April","May","June","July","August","September","October","November","December");
-
-	//出力用
-	var s = "Date / "+month[mon] + " " + day + ", " + year + " (" +youbi[you] + ")";
-	return s;
-}
-</script>
-                <input type="text" name="title" Placeholder="Title" class="form-control border-0">
-  <br>
-                <div class="col-12">
-                  <h2>Category</h2>
-                  <select name="category" id="" class="form-control border-0" required>
-                  <option selected disabled>Choose your category</option>
-                
-                  <?php
-                  foreach($categories as $row){
-                    echo "
-                    <option value='".$row['category_id']."'>".$row['category']."</opution>
-                    ";
-                  }
-                  ?>
-                  </select>
-                </div>
-                <div class="col-12">
-                  <h2>Content</h2>
-                  <textarea name="content" id="" cols="30" rows="10" class="form-control border-0" placeholder="What Are you doing?"></textarea>
-                </div>
-                <div class="col-12">
-                  <input type="submit" name="post" value="POST" class="btn btn-info p-2 float-right">
-                  <a href="index.php" class="text-danger float-right mt-1 mr-2"><i class="fas fa-times-circle fa-lg"></i></a>
-                </div>
-              </div>
-              </div>
-
-            </div>
-          </div>
+          <a href="index.php" class="btn btn-warning rounded"><i class="fas fa-backward"></i>back to articles</a>
         </div>
-      </form>
-    </div>
-
-  <hr>
+        </div>
+        </div>
+        </div>
+        
+        
 
   <!-- Footer -->
+
   <footer>
     <div class="container">
       <div class="row">
@@ -223,7 +191,6 @@ function getTodayE() {
   <!-- Custom scripts for this template -->
   <script src="js/clean-blog.min.js"></script>
 
-  <!-- upload picture-->
   <script>
         function readURL(input) {
             if (input.files && input.files[0]) {

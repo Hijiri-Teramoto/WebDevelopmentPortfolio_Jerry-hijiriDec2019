@@ -31,6 +31,41 @@
 
   <!-- Custom styles for this template -->
   <link href="css/clean-blog.min.css" rel="stylesheet">
+<style>
+td, th {
+  padding: 5px 10px;
+}
+ 
+thead th {
+  background: #110303;
+  color: #fff;
+}
+ 
+tbody tr {
+  border-bottom: 1px dotted #D8D5D5;
+}
+ 
+tbody td {
+  border-width: 0px 1px;
+  -webkit-transition: background-color .1s linear;
+  -moz-transition: background-color .1s linear;
+  transition: background-color .1s linear;
+}
+ 
+tbody tr:first-child {
+  border-top: none;
+}
+ 
+tbody tr.even td {
+  background: #fbfbfb;
+}
+
+tbody tr.clickable:hover td {
+  background: #ecf2fa;
+  cursor: pointer;
+}
+</style>
+
 
 </head>
 
@@ -56,11 +91,11 @@
             <a class="nav-link" href="contact.php">Contact</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="about.php"><?php 
+            <a class="nav-link pt-1" href="about.php"><?php 
             foreach($result as $row){
               $picture = $row['user_picture'];
             
-            echo "<img src='img/$picture' alt='sing up image' class='rounded-circle' style='width: 30px; height: 30px;'>
+            echo "<img src='img/$picture' alt='sing up image' class='rounded-circle' style='width: 35px; height: 35px;'>
             ";
             } 
             ?></a>
@@ -148,7 +183,7 @@
                       $avatarPicture = $row['user_picture'];
                       $userid = $row['user_id'];
                       echo "
-                      <tr>
+                      <tr data-href='userDetailAdmin.php?specID=$userid'>
                         <td>$userid</td>
                         <td><a href='userDetailAdmin.php?specID=$userid'><img src='img/$avatarPicture' class='rounded-circle' style='width: 40px; height: 40px;'></a></td>
                         <td>".$row['username']."</td>
@@ -236,6 +271,41 @@
 
   <!-- Custom scripts for this template -->
   <script src="js/clean-blog.min.js"></script>
+
+  <!-- upload picture-->
+  <script>
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#image').attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#files").change(function () {
+            readURL(this);
+        });
+    </script>
+
+    <!-- table scripts for tables -->
+ <script src="./jquery.min.js"></script>
+<script>
+jQuery( function($) {
+    $('tbody tr[data-href]').addClass('clickable').click( function() {
+        window.location = $(this).attr('data-href');
+    }).find('a').hover( function() {
+        $(this).parents('tr').unbind('click');
+    }, function() {
+        $(this).parents('tr').click( function() {
+            window.location = $(this).attr('data-href');
+        });
+    });
+});
+</script>
 
 </body>
 

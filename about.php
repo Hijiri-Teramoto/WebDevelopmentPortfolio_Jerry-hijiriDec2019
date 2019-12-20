@@ -5,7 +5,9 @@
   session_start();
   $userid = $_SESSION['userid'];
   $result = $user->about($userid);
-  // print_r($result);
+  $usersPost = $user->usersPosts($userid);
+  // echo $userid;
+  // print_r($usersPost);
 
 ?>
 
@@ -32,6 +34,41 @@
   <!-- Custom styles for this template -->
   <link href="css/clean-blog.min.css" rel="stylesheet">
 
+<style>
+td, th {
+  padding: 5px 10px;
+}
+ 
+thead th {
+  background: #110303;
+  color: #fff;
+}
+ 
+tbody tr {
+  border-bottom: 1px dotted #D8D5D5;
+}
+ 
+tbody td {
+  border-width: 0px 1px;
+  -webkit-transition: background-color .1s linear;
+  -moz-transition: background-color .1s linear;
+  transition: background-color .1s linear;
+}
+ 
+tbody tr:first-child {
+  border-top: none;
+}
+ 
+tbody tr.even td {
+  background: #fbfbfb;
+}
+
+tbody tr.clickable:hover td {
+  background: #ecf2fa;
+  cursor: pointer;
+}
+  </style>
+
 </head>
 
 <body>
@@ -56,11 +93,11 @@
             <a class="nav-link" href="contact.php">Contact</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="about.php"><?php 
+            <a class="nav-link pt-1" href="about.php"><?php 
             foreach($result as $row){
               $picture = $row['user_picture'];
             
-            echo "<img src='img/$picture' alt='sing up image' class='rounded-circle' style='width: 30px; height: 30px;'>
+            echo "<img src='img/$picture' alt='sing up image' class='rounded-circle' style='width: 35px; height: 35px;'>
             ";
             } 
             ?></a>
@@ -185,8 +222,40 @@
   </div>
   <div class="container d-block mt-5">
     <div class="col-lg-8 col-md-10 mx-auto">
-    <h2><i class="fas fa-sticky-note text-success"></i>Your Categories</h2>
-    
+    <h2><i class="fas fa-sticky-note text-success"></i>Your Posts</h2>
+        <div class="card">
+          <table class="table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Image</th>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Date</th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php
+                foreach($usersPost as $row){
+                  $postid = $row['post_id'];
+                  echo "
+                  <tr data-href='postDetailforUser.php?postid=$postid'>
+                    <td></td>
+                    <td><a href='postDetailforUser.php?postid=$postid' class=''><figure class='col-md-3 mt-2'><img src='img/".$row['post_image']."' alt='sing up image' style='width: 50px; height: 50px;'></figure></a></td>
+                    <td>".$row['title_name']."</td>
+                    <td>".$row['category']."</td>
+                    <td>".$row['post_date']."</td>
+                    <td><a href='actionUser.php?actiontype=deletePost&postid=$postid' class='btn btn-danger p-2 rounded'><i class='fas fa-trash-alt fa-lg'></i></a></td>
+                    <td><a href='postDetailforUser.php?postid=$postid' class=''><i class='fas fa-external-link-alt fa-lg'></i></a></td>
+                  </tr>
+                  ";
+                }
+              ?>
+            </tbody>
+          </table>
+        </div>
     </div>
   </div>
 
@@ -235,6 +304,22 @@
 
   <!-- Custom scripts for this template -->
   <script src="js/clean-blog.min.js"></script>
+
+ <!-- table scripts for tables -->
+ <script src="./jquery.min.js"></script>
+<script>
+jQuery( function($) {
+    $('tbody tr[data-href]').addClass('clickable').click( function() {
+        window.location = $(this).attr('data-href');
+    }).find('a').hover( function() {
+        $(this).parents('tr').unbind('click');
+    }, function() {
+        $(this).parents('tr').click( function() {
+            window.location = $(this).attr('data-href');
+        });
+    });
+});
+</script>
 
 </body>
 

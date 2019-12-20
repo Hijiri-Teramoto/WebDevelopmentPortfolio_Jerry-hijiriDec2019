@@ -3,9 +3,9 @@
     $user = new User;   
     $specID = $_GET['specID'];
     $userDetail = $user->getUserDetail($specID);
+    $usersPost = $user->usersPosts($specID);
     // print_r($viewCategory);
     session_start();
-
   $userid = $_SESSION['userid'];
   $result = $user->about($userid);
 ?>
@@ -56,11 +56,11 @@
             <a class="nav-link" href="contact.php">Contact</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="about.php"><?php 
+            <a class="nav-link pt-1" href="about.php"><?php 
             foreach($result as $row){
               $picture = $row['user_picture'];
             
-            echo "<img src='img/$picture' alt='sing up image' class='rounded-circle' style='width: 30px; height: 30px;'>
+            echo "<img src='img/$picture' alt='sing up image' class='rounded-circle' style='width: 35px; height: 35px;'>
             ";
             } 
             ?></a>
@@ -186,6 +186,46 @@
   </div>
 
   <hr>
+
+  <div class="container d-block mt-5">
+    <div class="col-lg-8 col-md-10 mx-auto">
+    <h2><i class="fas fa-sticky-note text-success"></i>Your Posts</h2>
+        <div class="card">
+          <table class="table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Date</th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php
+                foreach($usersPost as $row){
+                  $postid = $row['post_id'];
+                  $status = $_SESSION['user_status'];
+                  echo "
+                  $status
+                  <tr>
+                    <td></td>
+                    <td>".$row['title_name']."</td>
+                    <td>".$row['category']."</td>
+                    <td>".$row['post_date']."</td>
+                    <td><a href='actionUser.php?actiontype=deletePost&postid=$postid' class='btn btn-danger p-2 rounded'><i class='fas fa-trash-alt fa-lg'></i></a></td>
+                    <td><a href='postDetailforUser.php?postid=$postid' class=''><i class='fas fa-external-link-alt fa-lg'></i></a></td>
+                  </tr>
+                  ";
+                }
+              ?>
+            </tbody>
+          </table>
+        </div>
+    </div>
+  </div>
+
 
   <!-- Footer -->
   <footer>

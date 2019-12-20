@@ -31,6 +31,7 @@
                 $_SESSION['username'] = $row['username'];
                 $_SESSION['email'] = $row['email'];
                 $_SESSION['user_picture'] = $row['user_picture'];                
+                $_SESSION['user_status'] = $row['user_status'];                
                 
                 if($row['user_status'] === 'U'){
                     header("Location: index.php");
@@ -92,6 +93,45 @@
         $categoryName = $_POST['categoryName'];
 
         $user->insertCategory($categoryName);
+    }else if(isset($_POST['post'])){
+        $title = $_POST['title'];
+        $categoryid = $_POST['category'];
+        $content = $_POST['content'];
+        $userid = $_SESSION['userid'];
+
+        $image_name = $_FILES['file']['name'];
+        
+        $target_dir = "img/";
+        
+        // echo $image_name;
+        $target_file = $target_dir.basename($_FILES['file']['name']);
+        move_uploaded_file($_FILES['file']['tmp_name'],$target_file);
+
+        $user->posting($image_name, $title, $categoryid, $content, $userid);
+    }else if($_GET['actiontype']=='deletePost'){
+        $postid = $_GET['postid'];
+        $status = $_SESSION['user_status'];
+        $user->deletePost($postid, $status);
+    }else if(isset($_POST['uploadPost'])){
+        $title = $_POST['title'];
+        $categoryid = $_POST['category'];
+        $content = $_POST['content'];
+        $postid = $_POST['postid'];
+
+        $image = $_POST['oldImage'];
+        $image_name = $_FILES['file']['name'];
+        
+        $target_dir = "img/";
+        $target_file = $target_dir.basename($_FILES['file']['name']);
+        move_uploaded_file($_FILES['file']['tmp_name'],$target_file);
+        if(empty($image_name)){
+            $user->uploatdPost1($image, $title, $categoryid, $content, $postid);
+        }else{
+            $user->uploatdPost2($image_name, $title, $categoryid, $content, $postid);
+
+        }
+
+        // $user->uploatdPost($image_name, $title, $categoryid, $content, $postid);
     }
     
 ?>
