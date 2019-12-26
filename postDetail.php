@@ -137,9 +137,6 @@
        "; 
           }
         ?>
-        <div class="row">
-          <a href="index.php" class="btn btn-warning rounded"><i class="fas fa-backward"></i>back to articles</a>
-        </div>
         </div>
         </div>
         </div>

@@ -79,8 +79,8 @@
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="site-heading">
-            <h1>Clean Blog</h1>
-            <span class="subheading">A Blog Theme by Start Bootstrap</span>
+            <h1>Let's Blog</h1>
+            <span class="subheading"></span>
           </div>
         </div>
       </div>
@@ -96,13 +96,15 @@
           $postImage = $row['post_image'];
           $postid = $row['post_id'];
           $avatorImage = $row['user_picture'];
+          $userid = $row['user_id'];
          echo "
-         <a href='postDetail.php?postid=$postid'>
             <div class='card border mb-4'>
-              <div class='card-header post-preview'>
-                <div class='row' style='height: 50px;'>
+              <div class='card-header post-preview bg-white border-0'>
+                <div class='row' style='height: 10px;'>
                   <div class='col-1'>
+                  <a href='userDetail.php?specID=$userid'>
                     <img src='img/$avatorImage' alt='sing up image' class='rounded-circle' style='width: 35px; height: 35px;'>
+                  </a>
                   </div>
                   <div class='col-4'>
                     <h3>".$row['username']."</h3>
@@ -111,37 +113,42 @@
                     ".$row['post_date']."
                   </div>
                 </div>
-                <div class='row'>
+              </div>
+              <div class='post-preview card-body px-0 pb-0' style='height: 400px;'>
+                <a href='postDetail.php?postid=$postid'>
                   <img src='img/$postImage' alt='Picture of Post' class='w-100 h-100'>
-                </div>
-              <div class='post-preview card-body'>
-                <div class='row'>
+              </div>                
+              <div class='post-preview card-footer'>    
+                <div class='row px-3'>
                   <h2 class='post-title'>
                     ".$row['title_name']."
                   </h2>
                 </div>
+                <div class='row px-3'>
                   <p data-bind='text: text()' class='text-truncate post-subtitle' style='max-width: 700px;'>
-
+                </row>
                   ".$row['post_content']." 
                   </p>
                   <br>
-                  
-                  <div class='row d-inline-block px-auto'>
+                </div>  
+                <div class='row d-inline-block px-3'>
                   <a href='postDetail.php?postid=$postid' class='border-info text-info'>view more</a>
                   <br>
-                <div class='row'>
+                </div>
+                <div class='row px-3'>
                   <p class='border d-block border-info rounded my-1 text-info'>".$row['category']."</p>
                 </div>
-                </div>        
-              </div>
+                </a>
               </div>
             </div>
-            </a>
+
             "; 
           }
         ?>
-        <hr>
-        
+
+            </div>        
+          </div>        
+        </div>        
   <!-- Footer -->
   <footer>
     <div class="container">

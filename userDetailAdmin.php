@@ -208,7 +208,6 @@
                   $postid = $row['post_id'];
                   $status = $_SESSION['user_status'];
                   echo "
-                  $status
                   <tr>
                     <td></td>
                     <td>".$row['title_name']."</td>

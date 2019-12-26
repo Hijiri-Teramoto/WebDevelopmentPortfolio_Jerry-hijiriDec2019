@@ -67,8 +67,8 @@
                 header("Location: about.php");
             }
         }
-        public function viewUsers(){
-            $sql ="SELECT * FROM `user` WHERE user_status = 'U'";
+        public function viewUsers($userid){
+            $sql ="SELECT * FROM `user` WHERE user_status = 'U' AND NOT user.user_id = '$userid'";
             $rows = array();
             $result = $this->conn->query($sql);
             while($row = $result->fetch_assoc()){
@@ -125,20 +125,20 @@
 
         }
         public function posting($image_name, $title, $categoryid, $content, $userid){
-            $sql ="INSERT INTO `post`(post_image, title_name, post_content, category_id, user_id) 
+            $sql ="INSERT INTO `post`(post_image, title_name, post_content, category_id, user_id)
             VALUES ('$image_name', '$title', '$content', '$categoryid', '$userid')";
-            echo $sql;
-
             if($this->conn->query($sql)){
-                echo $userid;
-                print_r($sql);
+                // print_r($sql);
                 header("Location: index.php");
+            }else {
+                echo "error";
             }
         }
         public function viewPost(){
             $sql ="SELECT * FROM `post`
                 INNER JOIN `user` ON post.user_id = user.user_id
                 INNER JOIN `categories` ON post.category_id = categories.category_id
+                order by post_date desc
                 
             ";
             $rows = array();
@@ -206,6 +206,24 @@
 
             if($this->conn->query($sql)){
                 header("Location: postDetailforUser.php?postid=$postid");
+            }
+        }
+        public function follow($followid, $userid){
+            $sql ="INSERT INTO `follow`(follow_id, user_id) VALUES ('$followid', '$userid')";
+            echo $sql;
+            if($this->conn->query($sql)){
+                header("Location:contact.php");
+            }
+        }
+        public function checkFollow($followid, $userid){
+            $sql ="SELECT * FROM `follow` where follow_id = '$followid' AND user_id = '$userid'";
+            $resutl = $this->conn->query($sql);
+            if($result->num_rows == 1){
+                $row = $result->fetch_assoc();
+                
+                echo "follow";
+            }else{
+                echo "no yet";
             }
         }
     }

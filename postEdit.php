@@ -69,7 +69,7 @@
             <a class="nav-link" href="index.php">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="post.php">Sample Post</a>
+            <a class="nav-link" href="post.php">Post</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="contact.php">Contact</a>
@@ -162,7 +162,7 @@
                                     </div>
                                     <div class='col-12'>
                                         <input type='hidden' name='postid' value='".$row['post_id']."'>
-                                        <input type='submit' name='uploadPost' value='upload' class='btn btn-info p-2 float-right'>
+                                        <input type='submit' name='uploadPost' value='Save Changes' class='btn btn-info p-2 float-right'>
                                         <a href='postDetailforUser.php?postid=".$row['post_id']."' class='text-danger float-right mt-1 mr-2'><i class='fas fa-times-circle fa-lg'></i></a>
                                             "; 
                                         }

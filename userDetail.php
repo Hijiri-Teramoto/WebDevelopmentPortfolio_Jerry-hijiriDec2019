@@ -1,11 +1,13 @@
 <?php
-  require_once 'class/User.php';
-  $user = new User;
-  
-  session_start();
-  
+    require_once 'class/User.php';
+    $user = new User;   
+    $specID = $_GET['specID'];
+    
+    $usersPost = $user->usersPosts($specID);
+    // print_r($viewCategory);
+    session_start();
   $userid = $_SESSION['userid'];
-  $viewUser = $user->viewUsers($userid);
+  $userDetail = $user->getUserDetail($specID, $userid);
   $result = $user->about($userid);
 ?>
 <!DOCTYPE html>
@@ -31,7 +33,41 @@
   <!-- Custom styles for this template -->
   <link href="css/clean-blog.min.css" rel="stylesheet">
 
-  
+  <style>
+  td, th {
+  padding: 5px 10px;
+}
+ 
+thead th {
+  background: #110303;
+  color: #fff;
+}
+ 
+tbody tr {
+  border-bottom: 1px dotted #D8D5D5;
+}
+ 
+tbody td {
+  border-width: 0px 1px;
+  -webkit-transition: background-color .1s linear;
+  -moz-transition: background-color .1s linear;
+  transition: background-color .1s linear;
+}
+ 
+tbody tr:first-child {
+  border-top: none;
+}
+ 
+tbody tr.even td {
+  background: #fbfbfb;
+}
+
+tbody tr.clickable:hover td {
+  background: #ecf2fa;
+  cursor: pointer;
+}
+  </style>
+
 </head>
 
 <body>
@@ -39,7 +75,7 @@
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
     <div class="container">
-      <a class="navbar-brand" href="index.php">Start Bootstrap</a>
+      <a class="navbar-brand" href="index.php">Hi! <?php echo $_SESSION['username'] ?></a>
       <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         Menu
         <i class="fas fa-bars"></i>
@@ -75,14 +111,14 @@
   </nav>
 
   <!-- Page Header -->
-  <header class="masthead" style="background-image: url('img/contact-bg.jpg')">
+  <header class="masthead" style="background-image: url('img/home-bg.jpg')">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
-          <div class="page-heading">
-            <h1>Contact Me</h1>
-            <span class="subheading">Have questions? I have answers.</span>
+          <div class="site-heading">
+            <h1>Clean Blog</h1>
+            <span class="subheading">A Blog Theme by Start Bootstrap</span>
           </div>
         </div>
       </div>
@@ -90,50 +126,78 @@
   </header>
 
   <!-- Main Content -->
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto">
-        <table class="table">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Username</th>
-              <th>Bio</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-          
-        <?php
-          include 'class/User.php';
-          $userid = "8";
-          $followid = "7";
-          $checkFollow = $user->checkFollow($followid, $userid);
-          echo $checkFollow;
-          foreach($viewUser as $row){
-            $userid = $row['user_id'];
-            
+  <div class="container d-block">
+    <div class="col-lg-8 col-md-10 mx-auto">
+    <h2><i class="fas fa-user-cog text-info"></i>Your Profile</h2>
+      <div class="card">
+        
+        <div class="card-header d-block bg-white border-0">
+          <div class="row p-0" style="">
+
+          <?php
+            foreach($userDetail as $row){
+              $picture = $row['user_picture'];
+
             echo "
-            $userid
-              <tr>
-                <form action='actionUser.php' method='post'>
-                <input type='hidden' name='userid' value='$userid'>
-                <td><img src='img/".$row['user_picture']."' alt='sing up image' class='rounded-circle' style='width: 35px; height: 35px;'></td>
-                <td>".$row['username']."</td>
-                <td>".$row['bio']."</td>
-                <td><input type='submit' name='follow' value='follow' class='btn btn-info btn p-2 init'></td>
-                </form>
-              </tr>
-            ";
+            <figure class='col-md-3 mt-2'><img src='img/$picture' alt='sing up image' style='width: 150px; height: 150px;'></figure>
+
+              <div class='row col-md-9 ml-1'>
+                <div class='col-md-12'>
+                  <h2>".$row['username']."</h2>
+                  <p class='m-0'>
+                  ".$row['bio']."      
+                  </p>
+                </div>
+              </div>
+              </div>
+          </div>
+          ";
           }
-        ?>
-          </tbody>
-        </table>
+          ?>
+
+
       </div>
+
+    </div>
+  </div>
+  <div class="container d-block mt-5">
+    <div class="col-lg-8 col-md-10 mx-auto">
+    <h2><i class="fas fa-sticky-note text-success"></i>Your Posts</h2>
+        <div class="card">
+          <table class="table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Images</th>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Date</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php
+                foreach($usersPost as $row){
+                  $postid = $row['post_id'];
+                  $status = $_SESSION['user_status'];
+                  echo "
+                  <tr data-href='postDetail.php?postid=$postid'>
+                    <td></td>
+                    <td><img src='img/".$row['post_image']."' alt='sing up image' style='width: 50px; height: 50px;'></td>
+                    <td>".$row['title_name']."</td>
+                    <td>".$row['category']."</td>
+                    <td>".$row['post_date']."</td>
+                    <td><a href='postDetail.php?postid=$postid' class=''><i class='fas fa-external-link-alt fa-lg'></i></a></td>
+                  </tr>
+                  ";
+                }
+              ?>
+            </tbody>
+          </table>
+        </div>
     </div>
   </div>
 
-  <hr>
 
   <!-- Footer -->
   <footer>
@@ -176,12 +240,24 @@
   <script src="vendor/jquery/jquery.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-  <!-- Contact Form JavaScript -->
-  <script src="js/jqBootstrapValidation.js"></script>
-  <script src="js/contact_me.js"></script>
-
   <!-- Custom scripts for this template -->
   <script src="js/clean-blog.min.js"></script>
+
+  <!-- table scripts for tables -->
+ <script src="./jquery.min.js"></script>
+<script>
+jQuery( function($) {
+    $('tbody tr[data-href]').addClass('clickable').click( function() {
+        window.location = $(this).attr('data-href');
+    }).find('a').hover( function() {
+        $(this).parents('tr').unbind('click');
+    }, function() {
+        $(this).parents('tr').click( function() {
+            window.location = $(this).attr('data-href');
+        });
+    });
+});
+</script>
 
 </body>
 

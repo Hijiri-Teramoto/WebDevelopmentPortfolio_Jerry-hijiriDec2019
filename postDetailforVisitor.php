@@ -1,13 +1,17 @@
 <?php
   require_once 'class/User.php';
   $user = new User;
-  
+
   session_start();
-  
   $userid = $_SESSION['userid'];
-  $viewUser = $user->viewUsers($userid);
   $result = $user->about($userid);
+  $postid = $_GET['postid'];
+  $postDetail = $user->postDetail($postid);
+  // echo $userid;
+  // print_r($usersPost);
+
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -31,7 +35,6 @@
   <!-- Custom styles for this template -->
   <link href="css/clean-blog.min.css" rel="stylesheet">
 
-  
 </head>
 
 <body>
@@ -39,7 +42,7 @@
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
     <div class="container">
-      <a class="navbar-brand" href="index.php">Start Bootstrap</a>
+      <a class="navbar-brand" href="index.php">Hi! <?php echo $_SESSION['username'] ?></a>
       <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         Menu
         <i class="fas fa-bars"></i>
@@ -75,14 +78,14 @@
   </nav>
 
   <!-- Page Header -->
-  <header class="masthead" style="background-image: url('img/contact-bg.jpg')">
+  <header class="masthead" style="background-image: url('img/about-bg.jpg')">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="page-heading">
-            <h1>Contact Me</h1>
-            <span class="subheading">Have questions? I have answers.</span>
+            <h1>About Me</h1>
+            <span class="subheading">This is what I do.</span>
           </div>
         </div>
       </div>
@@ -93,45 +96,61 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-8 col-md-10 mx-auto">
-        <table class="table">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Username</th>
-              <th>Bio</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-          
-        <?php
-          include 'class/User.php';
-          $userid = "8";
-          $followid = "7";
-          $checkFollow = $user->checkFollow($followid, $userid);
-          echo $checkFollow;
-          foreach($viewUser as $row){
-            $userid = $row['user_id'];
+      <?php
+        foreach($postDetail as $row){
+          $postImage = $row['post_image'];
+          $avatorImage = $row['user_picture'];
+         echo "
+         <div class='card border mb-4'>
+         <div class='card-header post-preview'>
+           <div class='row' style='height: 50px;'>
+             <div class='col-1'>
+               <img src='img/$avatorImage' alt='sing up image' class='rounded-circle' style='width: 35px; height: 35px;'>
+             </div>
+             <div class='col-4'>
+               <h3>".$row['username']."</h3>
+             </div>
+             <div class='col-7 text-right'>
+               ".$row['post_date']."
+             </div>
+           </div>
+           <div class='row'>
+             <img src='img/$postImage' alt='Picture of Post' class='w-100 h-100'>
+           </div>
+         <div class='post-preview card-body'>
+           <div class='row'>
             
-            echo "
-            $userid
-              <tr>
-                <form action='actionUser.php' method='post'>
-                <input type='hidden' name='userid' value='$userid'>
-                <td><img src='img/".$row['user_picture']."' alt='sing up image' class='rounded-circle' style='width: 35px; height: 35px;'></td>
-                <td>".$row['username']."</td>
-                <td>".$row['bio']."</td>
-                <td><input type='submit' name='follow' value='follow' class='btn btn-info btn p-2 init'></td>
-                </form>
-              </tr>
-            ";
+             <h2 class='post-title'>
+               ".$row['title_name']."
+             </h2>
+             <div class='col-12'>   
+                <p>
+                ".$row['post_content']." 
+                </p>
+             </div>
+             <br>
+             </div>
+            <div class='row'>
+             <p class='border d-block border-info rounded my-1 text-info'>".$row['category']."</p>
+           </div>        
+           <div class='row'>
+              <div class='col-12'>
+                <a href='postEdit.php?postid=$postid' class='btn btn-info p-2 rounded'><i class='fas fa-pencil-alt fa-lg'></i></a>  
+                <a href='actionUser.php?actiontype=deletePost&postid=$postid' class='btn btn-danger p-2 rounded'><i class='fas fa-trash-alt fa-lg'></i></a>
+           </div>
+         </div>
+         </div>
+       </div>
+       "; 
           }
         ?>
-          </tbody>
-        </table>
+        <div class="row">
+          <a href="about.php" class="btn btn-warning rounded"><i class="fas fa-backward"></i>back to Profile</a>
+        </div>
       </div>
     </div>
   </div>
+  
 
   <hr>
 
@@ -175,10 +194,6 @@
   <!-- Bootstrap core JavaScript -->
   <script src="vendor/jquery/jquery.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-  <!-- Contact Form JavaScript -->
-  <script src="js/jqBootstrapValidation.js"></script>
-  <script src="js/contact_me.js"></script>
 
   <!-- Custom scripts for this template -->
   <script src="js/clean-blog.min.js"></script>

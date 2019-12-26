@@ -103,11 +103,12 @@
         
         $target_dir = "img/";
         
-        // echo $image_name;
+        echo $image_name;
         $target_file = $target_dir.basename($_FILES['file']['name']);
         move_uploaded_file($_FILES['file']['tmp_name'],$target_file);
 
         $user->posting($image_name, $title, $categoryid, $content, $userid);
+        print_r($user);
     }else if($_GET['actiontype']=='deletePost'){
         $postid = $_GET['postid'];
         $status = $_SESSION['user_status'];
@@ -130,8 +131,13 @@
             $user->uploatdPost2($image_name, $title, $categoryid, $content, $postid);
 
         }
+    }else if(isset($_POST['follow'])){
+        $followid = $_SESSION['userid'];
+        $userid = $_POST['userid'];
+        echo $userid;
 
-        // $user->uploatdPost($image_name, $title, $categoryid, $content, $postid);
+    $result = $user->follow($followid, $userid);
+    print_r($result);
     }
     
 ?>
