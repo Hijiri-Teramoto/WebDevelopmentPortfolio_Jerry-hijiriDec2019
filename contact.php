@@ -39,7 +39,7 @@
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
     <div class="container">
-      <a class="navbar-brand" href="index.php">Start Bootstrap</a>
+      <a class="navbar-brand" href="index.php">Blog</a>
       <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         Menu
         <i class="fas fa-bars"></i>
@@ -105,22 +105,17 @@
           <tbody>
           
         <?php
-          include 'class/User.php';
-          $userid = "8";
-          $followid = "7";
-          $checkFollow = $user->checkFollow($followid, $userid);
-          echo $checkFollow;
           foreach($viewUser as $row){
             $userid = $row['user_id'];
-            
+
             echo "
-            $userid
               <tr>
                 <form action='actionUser.php' method='post'>
                 <input type='hidden' name='userid' value='$userid'>
                 <td><img src='img/".$row['user_picture']."' alt='sing up image' class='rounded-circle' style='width: 35px; height: 35px;'></td>
                 <td>".$row['username']."</td>
                 <td>".$row['bio']."</td>
+                
                 <td><input type='submit' name='follow' value='follow' class='btn btn-info btn p-2 init'></td>
                 </form>
               </tr>

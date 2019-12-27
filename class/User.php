@@ -209,21 +209,44 @@
             }
         }
         public function follow($followid, $userid){
-            $sql ="INSERT INTO `follow`(follow_id, user_id) VALUES ('$followid', '$userid')";
+            $sql ="INSERT INTO `follow`(follow_id, follower_id) VALUES ('$followid', '$userid')";
             echo $sql;
             if($this->conn->query($sql)){
                 header("Location:contact.php");
             }
         }
         public function checkFollow($followid, $userid){
-            $sql ="SELECT * FROM `follow` where follow_id = '$followid' AND user_id = '$userid'";
+            $sql ="SELECT * FROM `follow` where follow_id = '$followid' AND follower_id = '$userid'";
             $resutl = $this->conn->query($sql);
-            if($result->num_rows == 1){
+            if($result->num_rows > 0 ){
                 $row = $result->fetch_assoc();
                 
-                echo "follow";
+                echo "<input type='submit' name='follow' value='follow'>";
             }else{
-                echo "no yet";
+                echo "<input type='submit' name='unfollow' value='unfollow'>";
+                echo $userid;
+            }
+        }
+        public function viewUsersinContact($userid){
+            $sql ="SELECT * FROM `user` 
+                INNER JOIN follow ON user.user_id = follow.user_id 
+                WHERE user.user_status = 'U' AND user.user_id = '$userid'
+             ";
+             $rows = array();
+             $result = $this->conn->query($sql);
+             while($row = $result->fetch_assoc()){
+                 $rows[] = $row;
+             }
+             return $rows;
+        }
+        public function followingOfNumber($userid){
+            $sql ="SELECT COUNT( DISTINCT user_id, follower_id) FROM follow WHERE user_id = '$userid'";
+            $result = $this->conn->query($sql); 
+            if($result){
+                // $row = $result->fetch_assoc();
+                return $result;
+            }else{
+                echo "0";
             }
         }
     }

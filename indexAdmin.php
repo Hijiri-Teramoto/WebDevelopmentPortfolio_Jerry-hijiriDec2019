@@ -1,7 +1,7 @@
 <?php
     require_once 'class/User.php';
     $user = new User;   
-    $viewUser = $user->viewUsers();
+    $viewUser = $user->viewUsers($userid);
     $viewCategory = $user->viewCategory();
     // print_r($viewCategory);
     session_start();
