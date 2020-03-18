@@ -1,16 +1,15 @@
 <?php
-  require_once 'class/User.php';
-  $user = new User;
-
-  session_start();
+    require_once 'class/User.php';
+    $user = new User;   
+    $specID = $_GET['specID'];
+    
+    $usersPost = $user->usersPosts($specID);
+    // print_r($viewCategory);
+    session_start();
   $userid = $_SESSION['userid'];
+  $userDetail = $user->getUserDetail($specID, $userid);
   $result = $user->about($userid);
-  $usersPost = $user->usersPosts($userid);
-  // echo $userid;
-  // print_r($usersPost);
-
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -34,8 +33,8 @@
   <!-- Custom styles for this template -->
   <link href="css/clean-blog.min.css" rel="stylesheet">
 
-<style>
-td, th {
+  <style>
+  td, th {
   padding: 5px 10px;
 }
  
@@ -112,14 +111,14 @@ tbody tr.clickable:hover td {
   </nav>
 
   <!-- Page Header -->
-  <header class="masthead" style="background-image: url('img/about-bg.jpg')">
+  <header class="masthead" style="background-image: url('img/home-bg.jpg')">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
-          <div class="page-heading">
-            <h1>About Me</h1>
-            <span class="subheading">This is what I do.</span>
+          <div class="site-heading">
+            <h1>Clean Blog</h1>
+            <span class="subheading">A Blog Theme by Start Bootstrap</span>
           </div>
         </div>
       </div>
@@ -136,15 +135,14 @@ tbody tr.clickable:hover td {
           <div class="row p-0" style="">
 
           <?php
-            foreach($result as $row){
+            foreach($userDetail as $row){
               $picture = $row['user_picture'];
 
             echo "
-            <figure class='col-md-3 mt-2'><img src='img/$picture' alt='sing up image' style='width: 100px; height: 100px;'></figure>
+            <figure class='col-md-3 mt-2'><img src='img/$picture' alt='sing up image' style='width: 150px; height: 150px;'></figure>
 
               <div class='row col-md-9 ml-1'>
                 <div class='col-md-12'>
-                <a href='about_edit.php' class='float-right mt-1 waves-effec'><i class='fas fa-external-link-alt'></i></a>
                   <h2>".$row['username']."</h2>
                   <p class='m-0'>
                   ".$row['bio']."      
@@ -152,64 +150,6 @@ tbody tr.clickable:hover td {
                 </div>
               </div>
               </div>
-          </div>
-        
-        <div class='card-body mt-0'>
-          <div class='row'>
-            <div class='col-md-6'>
-              <p>First Name</p>
-            </div>
-            <div class='col-md-6'>
-              <p>".$row['user_first_name']."</p>
-            </div>
-          </div>
-          <div class='row'>
-            <div class='col-md-6'>
-              <p>Last Name</p>
-            </div>
-            <div class='col-md-6'>
-              <p>".$row['user_last_name']."</p>
-            </div>
-          </div>
-          <div class='row'>
-            <div class='col-md-6'>
-              <p>E-mail</p>
-            </div>
-            <div class='col-md-6'>
-              <p>".$row['email']."</p>
-            </div>
-          </div>
-          <div class='row'>
-            <div class='col-md-6'>
-              <p>Phone</p>
-            </div>
-            <div class='col-md-6'>
-              <p>".$row['phone']."</p>
-            </div>
-          </div>
-          <div class='row'>
-            <div class='col-md-6'>
-              <p>Nationality</p>
-            </div>
-            <div class='col-md-6'>
-              <p>".$row['nationality']."</p>
-            </div>
-          </div>
-          <div class='row'>
-            <div class='col-md-6'>
-              <p>Occupation</p>
-            </div>
-            <div class='col-md-6'>
-              <p>".$row['occupation']."</p>
-            </div>
-          </div>
-          <div class='row'>
-            <div class='col-md-6'>
-              <p>Birth Day</p>
-            </div>
-            <div class='col-md-6'>
-              <p>".$row['user_birthday']."</p>
-            </div>
           </div>
           ";
           }
@@ -228,11 +168,10 @@ tbody tr.clickable:hover td {
             <thead>
               <tr>
                 <th></th>
-                <th>Image</th>
+                <th>Images</th>
                 <th>Title</th>
                 <th>Category</th>
                 <th>Date</th>
-                <th></th>
                 <th></th>
               </tr>
             </thead>
@@ -240,15 +179,15 @@ tbody tr.clickable:hover td {
               <?php
                 foreach($usersPost as $row){
                   $postid = $row['post_id'];
+                  $status = $_SESSION['user_status'];
                   echo "
-                  <tr data-href='postDetailforUser.php?postid=$postid'>
+                  <tr data-href='postDetail.php?postid=$postid'>
                     <td></td>
-                    <td><a href='postDetailforUser.php?postid=$postid' class=''><figure class='col-md-3 mt-2'><img src='img/".$row['post_image']."' alt='sing up image' style='width: 50px; height: 50px;'></figure></a></td>
+                    <td><img src='img/".$row['post_image']."' alt='sing up image' style='width: 50px; height: 50px;'></td>
                     <td>".$row['title_name']."</td>
                     <td>".$row['category']."</td>
                     <td>".$row['post_date']."</td>
-                    <td><a href='actionUser.php?actiontype=deletePost&postid=$postid' class='btn btn-danger p-2 rounded'><i class='fas fa-trash-alt fa-lg'></i></a></td>
-                    <td><a href='postDetailforUser.php?postid=$postid' class=''><i class='fas fa-external-link-alt fa-lg'></i></a></td>
+                    <td><a href='postDetail.php?postid=$postid' class=''><i class='fas fa-external-link-alt fa-lg'></i></a></td>
                   </tr>
                   ";
                 }
@@ -259,7 +198,6 @@ tbody tr.clickable:hover td {
     </div>
   </div>
 
-  <hr>
 
   <!-- Footer -->
   <footer>
@@ -305,7 +243,7 @@ tbody tr.clickable:hover td {
   <!-- Custom scripts for this template -->
   <script src="js/clean-blog.min.js"></script>
 
- <!-- table scripts for tables -->
+  <!-- table scripts for tables -->
  <script src="./jquery.min.js"></script>
 <script>
 jQuery( function($) {

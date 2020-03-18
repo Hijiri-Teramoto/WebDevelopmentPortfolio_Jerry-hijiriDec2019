@@ -1,16 +1,14 @@
 <?php
-  require_once 'class/User.php';
-  $user = new User;
-
-  session_start();
+    require_once 'class/User.php';
+    $user = new User;   
+    $specID = $_GET['specID'];
+    $userDetail = $user->getUserDetail($specID);
+    $usersPost = $user->usersPosts($specID);
+    // print_r($viewCategory);
+    session_start();
   $userid = $_SESSION['userid'];
   $result = $user->about($userid);
-  $usersPost = $user->usersPosts($userid);
-  // echo $userid;
-  // print_r($usersPost);
-
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -33,41 +31,6 @@
 
   <!-- Custom styles for this template -->
   <link href="css/clean-blog.min.css" rel="stylesheet">
-
-<style>
-td, th {
-  padding: 5px 10px;
-}
- 
-thead th {
-  background: #110303;
-  color: #fff;
-}
- 
-tbody tr {
-  border-bottom: 1px dotted #D8D5D5;
-}
- 
-tbody td {
-  border-width: 0px 1px;
-  -webkit-transition: background-color .1s linear;
-  -moz-transition: background-color .1s linear;
-  transition: background-color .1s linear;
-}
- 
-tbody tr:first-child {
-  border-top: none;
-}
- 
-tbody tr.even td {
-  background: #fbfbfb;
-}
-
-tbody tr.clickable:hover td {
-  background: #ecf2fa;
-  cursor: pointer;
-}
-  </style>
 
 </head>
 
@@ -112,14 +75,14 @@ tbody tr.clickable:hover td {
   </nav>
 
   <!-- Page Header -->
-  <header class="masthead" style="background-image: url('img/about-bg.jpg')">
+  <header class="masthead" style="background-image: url('img/home-bg.jpg')">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
-          <div class="page-heading">
-            <h1>About Me</h1>
-            <span class="subheading">This is what I do.</span>
+          <div class="site-heading">
+            <h1>Clean Blog</h1>
+            <span class="subheading">A Blog Theme by Start Bootstrap</span>
           </div>
         </div>
       </div>
@@ -136,15 +99,16 @@ tbody tr.clickable:hover td {
           <div class="row p-0" style="">
 
           <?php
-            foreach($result as $row){
+            foreach($userDetail as $row){
               $picture = $row['user_picture'];
 
             echo "
-            <figure class='col-md-3 mt-2'><img src='img/$picture' alt='sing up image' style='width: 100px; height: 100px;'></figure>
+            <figure class='col-md-3 mt-2'><img src='img/$picture' alt='sing up image' style='width: 150px; height: 150px;'></figure>
 
               <div class='row col-md-9 ml-1'>
                 <div class='col-md-12'>
                 <a href='about_edit.php' class='float-right mt-1 waves-effec'><i class='fas fa-external-link-alt'></i></a>
+                <a href='actionUser.php?actiontype=deleteUser&id=".$row['user_id']."' class='btn btn-danger float-right mr-1 mt-1 p-1 rounded'><i class='fas fa-trash-alt'></i></a>
                   <h2>".$row['username']."</h2>
                   <p class='m-0'>
                   ".$row['bio']."      
@@ -220,6 +184,9 @@ tbody tr.clickable:hover td {
 
     </div>
   </div>
+
+  <hr>
+
   <div class="container d-block mt-5">
     <div class="col-lg-8 col-md-10 mx-auto">
     <h2><i class="fas fa-sticky-note text-success"></i>Your Posts</h2>
@@ -228,7 +195,6 @@ tbody tr.clickable:hover td {
             <thead>
               <tr>
                 <th></th>
-                <th>Image</th>
                 <th>Title</th>
                 <th>Category</th>
                 <th>Date</th>
@@ -240,10 +206,10 @@ tbody tr.clickable:hover td {
               <?php
                 foreach($usersPost as $row){
                   $postid = $row['post_id'];
+                  $status = $_SESSION['user_status'];
                   echo "
-                  <tr data-href='postDetailforUser.php?postid=$postid'>
+                  <tr>
                     <td></td>
-                    <td><a href='postDetailforUser.php?postid=$postid' class=''><figure class='col-md-3 mt-2'><img src='img/".$row['post_image']."' alt='sing up image' style='width: 50px; height: 50px;'></figure></a></td>
                     <td>".$row['title_name']."</td>
                     <td>".$row['category']."</td>
                     <td>".$row['post_date']."</td>
@@ -259,7 +225,6 @@ tbody tr.clickable:hover td {
     </div>
   </div>
 
-  <hr>
 
   <!-- Footer -->
   <footer>
@@ -304,22 +269,6 @@ tbody tr.clickable:hover td {
 
   <!-- Custom scripts for this template -->
   <script src="js/clean-blog.min.js"></script>
-
- <!-- table scripts for tables -->
- <script src="./jquery.min.js"></script>
-<script>
-jQuery( function($) {
-    $('tbody tr[data-href]').addClass('clickable').click( function() {
-        window.location = $(this).attr('data-href');
-    }).find('a').hover( function() {
-        $(this).parents('tr').unbind('click');
-    }, function() {
-        $(this).parents('tr').click( function() {
-            window.location = $(this).attr('data-href');
-        });
-    });
-});
-</script>
 
 </body>
 

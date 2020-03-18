@@ -37,12 +37,7 @@
   <!--form reaauto css -->
   <style>
   @media screen { #files { display: none; } }
-.browse_btn {
-  background-color: #d3d3d3;
-  padding: 6px;
-  border-radius: 8px;
-  font-weight: bold;
-}
+
 .profile-img .file {
     position: relative;
     overflow: hidden;
@@ -52,6 +47,7 @@
     border-radius: 0;
     font-size: 15px;
     background: #212529b8;
+    
 }
 .profile-img .file input {
     position: absolute;
@@ -59,7 +55,22 @@
     right: 0;
     top: 0;
 }
-  </style>
+.browse_btn {
+  position: absolute;
+  top: 0px;
+  left: 15px; 
+  background-color: rgba(0,0,0,0.4);
+  height: 100px;
+  width: 100px;
+  cursor: pointer;
+}
+.fa-camera {
+  position: absolute;
+  top:35px;
+  left: 30px;
+}
+
+</style>
   <!-- 写真をすぐDisplayするJavascript-->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
@@ -87,8 +98,15 @@
             <a class="nav-link" href="contact.php">Contact</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="about.php"><?php $userPicture = $_SESSION['user_picture'];
-            echo "<img src='img/$userPicture' alt='sing up image' class='rounded-circle' style='width: 40px; height: 40px;'>"; ?></a>
+            <a class="nav-link pt-1" href="about.php"><?php 
+            foreach($result as $row){
+              $picture = $row['user_picture'];
+            
+            echo "<img src='img/$picture' alt='sing up image' class='rounded-circle' style='width: 35px; height: 35px;'>
+            ";
+            } 
+            ?></a>
+
           </li>
           <li class="nav-item">
             <a class="nav-link" href="actionUser.phpactiontype=logout&userid=<?php echo $_SESSION['userid'] ?>">Logout<i class="fas fa-sign-out-alt ml-1"></i></a>
@@ -122,7 +140,7 @@
         
         <div class="card-header d-block bg-white border-0">
           <form action="actionUser.php" method="post" enctype="multipart/form-data">
-          <div class="row p-2" style="">
+          <div class="row" style="">
 
           <?php
             foreach($result as $row){
@@ -142,69 +160,76 @@
             <div class='col-md-3'>
               <div class='profile-img'>
               <label for='files'>
-              <img src='img/$picture' id='image' alt='sing up image' style='width: 150px; height: 200px;'>
-              <span class='browse_btn'><i class='fas fa-camera'></i></span><input type='file' name='file' id='files'>
+                <img src='img/$picture' id='image' alt='sing up image' style='width: 100px; height: 100px;'>
+                  <span class='browse_btn'><i class='fas fa-camera fa-2x text-white'></i></span><input type='file' name='file' id='files'>
                 </label>
               </div>
             </div>
             
 
-              <div class='row col-md-9 ml-1'>
+              <div class='row col-md-9'>
                 <div class='col-md-12'>
-                  <h2><input type='text' name='newUname' value='$uname'></h2>
-                  <textarea name='newBio' class='mx-auto'>$bio</textarea>
+                  <h2><input type='text' name='newUname' class='form-control' value='$uname'></h2>
+                  <textarea name='newBio' class='mx-auto form-control'>$bio</textarea>
                 </div>
               </div>
               </div>
           </div>
         
-        <div class='card-body mt-0 mx-5'>
+        <div class='card-body m-0'>
+        <hr>
           <div class='row'>
-            <div class='col-md-6'>
+            <div class='col-6 mr-0'>
                 <p>First Name</p>
             </div>
-            <div class='col-md-6 my-auto'>
-                <input type='text' name='newFName' value='$uFName' class='form-control'>
+            <div class='col-6 my-auto' style='width: 100px;'>
+                <input type='text' name='newFName' value='$uFName' class='form-control border-0'>
             </div>
           </div>
+          <hr>
           <div class='row'>
-            <div class='col-md-6'>
+          <hr>
+            <div class='col-6'>
               <p>Last Name</p>
             </div>
-            <div class='col-md-6 my-auto'>
-            <input type='text' name='newLName' value='$uLName' class='form-control'>
+            <div class='col-6 my-auto'>
+            <input type='text' name='newLName' value='$uLName' class='form-control border-0'>
             </div>
           </div>
+          <hr>
           <div class='row'>
-            <div class='col-md-6'>
+            <div class='col-6'>
               <p>E-mail</p>
             </div>
-            <div class='col-md-6 my-auto'>
-            <input type='text' name='newEmail' value='$email' class='form-control'>
+            <div class='col-6 my-auto'>
+            <input type='text' name='newEmail' value='$email' class='form-control  border-0'>
             </div>
           </div>
+          <hr>
           <div class='row'>
-            <div class='col-md-6'>
+            <div class='col-6'>
               <p>Phone</p>
             </div>
-            <div class='col-md-6 my-auto'>
-            <input type='text' name='newPhone' value='$phone' class='form-control'>
+            <div class='col-6 my-auto'>
+            <input type='text' name='newPhone' value='$phone' class='form-control  border-0'>
             </div>
           </div>
+          <hr>
           <div class='row'>
-            <div class='col-md-6'>
+            <div class='col-6'>
               <p>Nationality</p>
             </div>
-            <div class='col-md-6 my-auto'>
-            <input type='text' name='newNationality' value='$nationality' class='form-control'>
+            <div class='col-6 my-auto'>
+            <input type='text' name='newNationality' value='$nationality' class='form-control  border-0'>
             </div>
           </div>
+          <hr>
           <div class='row'>
-            <div class='col-md-6'>
+            <div class='col-6'>
               <p>Occupation</p>
             </div>
-            <div class='col-md-6 my-auto'>
-            <select name='newOccupation' class='form-control'>
+            <div class='col-6 my-auto'>
+            <select name='newOccupation' class='form-control  border-0'>
               <option value='$occupation' selected>$occupation</option>
               <option value='公務員'>公務員</option>
               <option value='経営者・役員'>経営者・役員</option>
@@ -218,20 +243,22 @@
             </select>
             </div>
           </div>
+          <hr>
           <div class='row'>
-            <div class='col-md-6'>
+            <div class='col-6'>
               <p>Birth Day</p>
             </div>
-            <div class='col-md-6 my-auto'>
-            <input type='date' name='newbirthday' value='$birthday' class='form-control'>
+            <div class='col-6 my-auto'>
+            <input type='date' name='newbirthday' value='$birthday' class='form-control  border-0'>
             </div>
           </div>
+          <hr>
           <div class='row'>
-            <div class='col-md-6'>
+            <div class='col-6'>
               <p>Password</p>
             </div>
-            <div class='col-md-6 my-auto'>
-            <input type='password' name='newPword' placeholder='Enter a New Password' class='form-control' required>
+            <div class='col-6 my-auto'>
+            <input type='password' name='newPword' placeholder='Enter a New Password' class='form-control  border-0' required>
             </div>
           </div>
           <input type='hidden' name='userid' value='$userid'>
@@ -310,7 +337,7 @@
         $("#files").change(function () {
             readURL(this);
         });
-    </script>
+  </script>
 
 
 </body>

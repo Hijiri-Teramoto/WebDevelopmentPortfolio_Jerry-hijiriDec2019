@@ -1,5 +1,11 @@
 <?php
-  session_start();
+ require_once 'class/User.php';
+ $user = new User;
+ $viewPost = $user->viewPost();
+ session_start();
+
+ $userid = $_SESSION['userid'];
+ $result = $user->about($userid);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -31,7 +37,7 @@
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
     <div class="container">
-      <a class="navbar-brand" href="index.php">Hi! <?php echo $_SESSION['username'] ?></a>
+      <a class="navbar-brand" href="index.php">Blog</a>
       <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         Menu
         <i class="fas fa-bars"></i>
@@ -48,8 +54,15 @@
             <a class="nav-link" href="contact.php">Contact</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="about.php"><?php $userPicture = $_SESSION['user_picture'];
-            echo "<img src='img/$userPicture' id='image' alt='sing up image' class='rounded-circle' style='width: 40px; height: 40px;'>"; ?></a>
+            <a class="nav-link pt-1" href="about.php"><?php 
+            foreach($result as $row){
+              $picture = $row['user_picture'];
+            
+            echo "<img src='img/$picture' alt='sing up image' class='rounded-circle' style='width: 35px; height: 35px;'>
+            ";
+            } 
+            ?></a>
+
           </li>
           <li class="nav-item">
             <a class="nav-link" href="actionUser.php?actiontype=logout&userid=<?php echo $_SESSION['userid'] ?>">Logout<i class="fas fa-sign-out-alt ml-1"></i></a>
@@ -66,8 +79,8 @@
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="site-heading">
-            <h1>Clean Blog</h1>
-            <span class="subheading">A Blog Theme by Start Bootstrap</span>
+            <h1>Let's Blog</h1>
+            <span class="subheading"></span>
           </div>
         </div>
       </div>
@@ -78,69 +91,64 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-8 col-md-10 mx-auto">
-        <div class="post-preview">
-          <a href="post.html">
-            <h2 class="post-title">
-              Man must explore, and this is exploration at its greatest
-            </h2>
-            <h3 class="post-subtitle">
-              Problems look mighty small from 150 miles up
-            </h3>
-          </a>
-          <p class="post-meta">Posted by
-            <a href="#">Start Bootstrap</a>
-            on September 24, 2019</p>
-        </div>
-        <hr>
-        <div class="post-preview">
-          <a href="post.html">
-            <h2 class="post-title">
-              I believe every human has a finite number of heartbeats. I don't intend to waste any of mine.
-            </h2>
-          </a>
-          <p class="post-meta">Posted by
-            <a href="#">Start Bootstrap</a>
-            on September 18, 2019</p>
-        </div>
-        <hr>
-        <div class="post-preview">
-          <a href="post.html">
-            <h2 class="post-title">
-              Science has not yet mastered prophecy
-            </h2>
-            <h3 class="post-subtitle">
-              We predict too much for the next year and yet far too little for the next ten.
-            </h3>
-          </a>
-          <p class="post-meta">Posted by
-            <a href="#">Start Bootstrap</a>
-            on August 24, 2019</p>
-        </div>
-        <hr>
-        <div class="post-preview">
-          <a href="post.html">
-            <h2 class="post-title">
-              Failure is not an option
-            </h2>
-            <h3 class="post-subtitle">
-              Many say exploration is part of our destiny, but it’s actually our duty to future generations.
-            </h3>
-          </a>
-          <p class="post-meta">Posted by
-            <a href="#">Start Bootstrap</a>
-            on July 8, 2019</p>
-        </div>
-        <hr>
-        <!-- Pager -->
-        <div class="clearfix">
-          <a class="btn btn-primary float-right" href="#">Older Posts &rarr;</a>
-        </div>
-      </div>
-    </div>
-  </div>
+      <?php
+        foreach($viewPost as $row){
+          $postImage = $row['post_image'];
+          $postid = $row['post_id'];
+          $avatorImage = $row['user_picture'];
+          $userid = $row['user_id'];
+         echo "
+            <div class='card border mb-4'>
+              <div class='card-header post-preview bg-white border-0'>
+                <div class='row' style='height: 10px;'>
+                  <div class='col-1'>
+                  <a href='userDetail.php?specID=$userid'>
+                    <img src='img/$avatorImage' alt='sing up image' class='rounded-circle' style='width: 35px; height: 35px;'>
+                  </a>
+                  </div>
+                  <div class='col-4'>
+                    <h3>".$row['username']."</h3>
+                  </div>
+                  <div class='col-7 text-right'>
+                    ".$row['post_date']."
+                  </div>
+                </div>
+              </div>
+              <div class='post-preview card-body px-0 pb-0' style='height: 400px;'>
+                <a href='postDetail.php?postid=$postid'>
+                  <img src='img/$postImage' alt='Picture of Post' class='w-100 h-100'>
+              </div>                
+              <div class='post-preview card-footer'>    
+                <div class='row px-3'>
+                  <h2 class='post-title'>
+                    ".$row['title_name']."
+                  </h2>
+                </div>
+                <div class='row px-3'>
+                  <p data-bind='text: text()' class='text-truncate post-subtitle' style='max-width: 700px;'>
+                </row>
+                  ".$row['post_content']." 
+                  </p>
+                  <br>
+                </div>  
+                <div class='row d-inline-block px-3'>
+                  <a href='postDetail.php?postid=$postid' class='border-info text-info'>view more</a>
+                  <br>
+                </div>
+                <div class='row px-3'>
+                  <p class='border d-block border-info rounded my-1 text-info'>".$row['category']."</p>
+                </div>
+                </a>
+              </div>
+            </div>
 
-  <hr>
+            "; 
+          }
+        ?>
 
+            </div>        
+          </div>        
+        </div>        
   <!-- Footer -->
   <footer>
     <div class="container">
